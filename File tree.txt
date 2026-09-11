@@ -1,0 +1,33 @@
+chess_project/
+│
+├── main.py                 # Entry point. Starts the program.
+│
+├── game/
+│   ├── __init__.py
+│   ├── game.py             # Runs a game, alternates turns.
+│   ├── board.py            # Board class and board state.
+│   ├── move.py             # Move class.
+│   ├── square.py           # Square class (optional).
+│   ├── piece.py            # Base Piece class.
+│   ├── pieces.py           # Pawn, Knight, Bishop, etc.
+│   ├── rules.py            # Chess rules and move legality.
+│   └── constants.py        # Board size, colours, etc.
+│
+├── engine/
+│   ├── __init__.py
+│   ├── search.py           # Minimax / Alpha-Beta later.
+│   ├── evaluate.py         # Position evaluation.
+│   ├── move_ordering.py    # Optional optimisation later.
+│   └── transposition.py    # Hash tables later.
+│
+├── ui/
+│   ├── __init__.py
+│   ├── terminal.py         # Text interface.
+│   └── renderer.py         # Board printing.
+│
+├── tests/
+│   ├── test_board.py
+│   ├── test_moves.py
+│   └── test_rules.py
+│
+└── README.md
