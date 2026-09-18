@@ -94,6 +94,15 @@ class Board:
             self.grid[captured_pawn_pos[0]][captured_pawn_pos[1]] = None
 
         # Place it at the destination
+        if self.grid[end_row][end_col] is not None and self.grid[end_row][end_col].name == "Rook":
+            if end == [7, 0]:
+                status.queenside_white_castling_available = False
+            elif end == [7, 7]:
+                status.kingside_white_castling_available = False
+            elif end == [0, 0]:
+                status.queenside_black_castling_available = False
+            elif end == [0, 7]:
+                status.kingside_black_castling_available = False
         self.grid[end_row][end_col] = moving_piece
         
         # Clear the starting square
