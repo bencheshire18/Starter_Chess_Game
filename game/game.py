@@ -34,6 +34,18 @@ running = True
 legal_moves = []
 while running:
     # Handle events
+    # Checking if checkmate before running through the rest of the logic
+    checkmate_counter = 0
+    for rows in range(8):
+        for cols in range(8):
+            check_start = [rows, cols]
+            checking_piece = board.grid[rows][cols]
+            if checking_piece is not None and checking_piece.colour == status.active_player:
+                checking_legal_moves = checking_piece.get_legal_moves(check_start, board, status, False)
+                checking_legal_moves = board.trim_legal_moves(check_start, checking_legal_moves, status)
+                if checking_legal_moves != []:
+                    checkmate_counter += 1
+
     status.in_check = board.is_check(status)
     for event in pygame.event.get():
 
@@ -55,23 +67,12 @@ while running:
     # Draw
     draw_board.draw_board(window)
 
-    checkmate_counter = 0
-    for rows in range(8):
-        for cols in range(8):
-            check_start = [rows, cols]
-            checking_piece = board.grid[rows][cols]
-            if checking_piece is not None and checking_piece.colour == status.active_player:
-                checking_legal_moves = checking_piece.get_legal_moves(check_start, board, status, False)
-                checking_legal_moves = board.trim_legal_moves(check_start, checking_legal_moves, status)
-                if checking_legal_moves != []:
-                    checkmate_counter += 1
-
     if checkmate_counter == 0:
         print("CHECKMATE!")
         running = False
 
     if square_selected == True:
-        draw_highlighted_squares.draw_highlighted_squares(window, row, col)
+        draw_highlighted_squares.draw(window, row, col)
         active_piece = board.grid[row][col]
         if active_piece is not None:
             if [row, col] in legal_moves:
