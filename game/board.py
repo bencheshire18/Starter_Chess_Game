@@ -47,7 +47,6 @@ class Board:
 
     # Move a piece
     def move_piece(self, start, end, status):
-        # print(f"Entering with:\n{start=}\n{end=}\n{status.en_passant_available=}")
         ep = False
         # En Passant captured pawn removal
         if end == status.en_passant_available:
@@ -66,8 +65,6 @@ class Board:
 
         # Take the piece from the start position
         moving_piece = self.grid[start_row][start_col]
-
-        # print(f"{moving_piece.symbol=}")
 
         #Check if square has a piece
         if moving_piece is None:
@@ -97,7 +94,6 @@ class Board:
             self.grid[captured_pawn_pos[0]][captured_pawn_pos[1]] = None
 
         # Place it at the destination
-        # print(f"Placing at destination:\n{self.grid[end_row][end_col]=}\n{moving_piece.symbol=}")
         self.grid[end_row][end_col] = moving_piece
         
         # Clear the starting square
