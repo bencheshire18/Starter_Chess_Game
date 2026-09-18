@@ -99,6 +99,7 @@ while running:
     display_info.write_board_coords(window)
     display_info.write_castling_availability(status, window)
     display_info.write_is_check(status, window)
+    display_info.write_en_passant(status, window)
 
     # Update display
     pygame.display.flip()

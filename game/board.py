@@ -1,6 +1,6 @@
 from game.constants import BOARD_SIZE
 from game.pieces    import Rook, Knight, Bishop, Queen, King, Pawn
-from game.pieces.piece_rules import castling
+from game.pieces.piece_rules import castling, en_passant
 
 class Board:
     def __init__(self):
@@ -47,6 +47,18 @@ class Board:
 
     # Move a piece
     def move_piece(self, start, end, status):
+        # print(f"Entering with:\n{start=}\n{end=}\n{status.en_passant_available=}")
+        ep = False
+        # En Passant captured pawn removal
+        if end == status.en_passant_available:
+            ep = True
+            if end[0] == 2:
+                captured_pawn_pos = [3, end[1]]
+            elif end[0] == 5:
+                captured_pawn_pos = [4, end[0]]
+            else:
+                captured_pawn_pos = [0, 0]
+
         start_row = start[0]
         start_col = start[1]
         end_row = end[0]
@@ -55,21 +67,37 @@ class Board:
         # Take the piece from the start position
         moving_piece = self.grid[start_row][start_col]
 
+        # print(f"{moving_piece.symbol=}")
+
         #Check if square has a piece
         if moving_piece is None:
+            status.en_passant_available = []
             return False
         
         if moving_piece.colour != status.active_player:
+            status.en_passant_available = []
             return False
 
         # Check legal moves - Might remove depending on how game.py handles legal moves
         if moving_piece.check_legal_moves([start_row, start_col], [end_row, end_col], self, status) == False:
+            status.en_passant_available = []
             return False
+        
+        # Update en passant rights if applicable
+        if moving_piece.symbol == "P" and start_row == 6 and end_row == 4:
+            status.en_passant_available = [5, start_col]
+        elif moving_piece.symbol == "p" and start_row == 1 and end_row == 3:
+            status.en_passant_available = [2, start_col]
 
         castling.castle(self, moving_piece, status, start, end)
         castling.remove_castling_rights(moving_piece, status, start)
 
+        # en_passant captured pawn removal
+        if ep:
+            self.grid[captured_pawn_pos[0]][captured_pawn_pos[1]] = None
+
         # Place it at the destination
+        # print(f"Placing at destination:\n{self.grid[end_row][end_col]=}\n{moving_piece.symbol=}")
         self.grid[end_row][end_col] = moving_piece
         
         # Clear the starting square

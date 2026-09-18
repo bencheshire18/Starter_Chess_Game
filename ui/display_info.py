@@ -34,3 +34,8 @@ def write_is_check(status, window):
     label = window.font.render(f"Is Check: {status.in_check}", True, (255, 255, 255))
     label_rect = label.get_rect(topleft=(window.board_size + window.margin * 2, 110))
     window.screen.blit(label, label_rect)
+
+def write_en_passant(status, window):
+    label = window.font.render(f"En Passant available: {status.en_passant_available}", True, (255, 255, 255))
+    label_rect = label.get_rect(topleft=(window.board_size + window.margin * 2, 130))
+    window.screen.blit(label, label_rect)

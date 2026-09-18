@@ -1,4 +1,5 @@
 from game.pieces.piece import Piece
+from game.pieces.piece_rules import en_passant
 
 class Pawn(Piece):
     def __init__(self, colour):
@@ -19,6 +20,10 @@ class Pawn(Piece):
         
         target_square = board.grid[end_row][end_col]
 
+        if status.en_passant_available is not []:
+            if en_passant.check_en_passant(start, end, board, status):
+                return True
+
         if start == end:
             #print("same-square move")
             return False
@@ -37,10 +42,13 @@ class Pawn(Piece):
                     return True
                 elif end_row - start_row == 2 and target_square is None and start_row == 1 and board.grid[end_row-1][end_col] is None:
                     return True
-                else: return False        
+                else: 
+                    return False        
         # Diagonal by one (capturing)
         elif abs(start_col - end_col) == 1:
-            if target_square is None:
+            if status.en_passant_available == end:
+                return True
+            elif target_square is None:
                 return False
             elif self.colour == "white":
                 if start_row - end_row == 1 and target_square.colour == "black":
