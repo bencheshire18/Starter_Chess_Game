@@ -11,7 +11,7 @@ class Knight(Piece):
 
         super().__init__("Knight", colour, symbol)
     
-    def check_legal_moves(self, start, end, board, status):
+    def check_legal_move(self, start, end, board, status):
 
         if start == end:
             return False

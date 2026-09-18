@@ -12,7 +12,7 @@ class Piece:
         else:
             for rows in range(8):
                 for cols in range(8):
-                    move = self.check_legal_moves(start, [rows, cols], board, status)
+                    move = self.check_legal_move(start, [rows, cols], board, status)
                     if move: valid_moves.append([rows, cols])
         
         return valid_moves

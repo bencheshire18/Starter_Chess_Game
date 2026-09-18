@@ -12,7 +12,7 @@ class Pawn(Piece):
         
         super().__init__("Pawn", colour, symbol)
         
-    def check_legal_moves(self, start, end, board, status):
+    def check_legal_move(self, start, end, board, status):
         start_row = start[0]
         start_col = start[1]
         end_row   = end[0]
