@@ -2,7 +2,7 @@ import game.constants as c
 import pygame
 from ui.get_coords_from_grid_pos import get_coords_from_grid_pos
 
-def draw_highlighted_squares(window, row, col):
+def draw(window, row, col):
 
     if row == -1:
         return False
