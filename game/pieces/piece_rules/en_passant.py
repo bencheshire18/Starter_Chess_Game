@@ -1,9 +1,27 @@
 def check_en_passant(start, end, board, status):
-    start_row = start[0]
-    start_col = start[1]
+    ep = status.en_passant_available
+    if not ep or end != ep:
+        return False
 
-    if status.en_passant_available != []:
-        en_passant_col = status.en_passant_available[1]
+    piece = board.grid[start[0]][start[1]]
+    if piece is None or piece.name != "Pawn":
+        return False
 
-    if end == status.en_passant_available and abs(start_col - en_passant_col) == 1 and abs(end[0] - start_row) == 1:
-        return True
+    # The ep square must be empty, and the pawn to be captured must be beside the capturer
+    if board.grid[end[0]][end[1]] is not None:
+        return False
+    victim = board.grid[start[0]][end[1]]
+    if victim is None or victim.name != "Pawn" or victim.colour == piece.colour:
+        return False
+
+    if abs(start[1] - end[1]) != 1:
+        return False
+
+    # White just double-pushed -> ep square is on row 5 -> black pawn on row 4 captures
+    if end[0] == 5:
+        return piece.colour == "black" and start[0] == 4
+    # Black just double-pushed -> ep square is on row 2 -> white pawn on row 3 captures
+    if end[0] == 2:
+        return piece.colour == "white" and start[0] == 3
+
+    return False

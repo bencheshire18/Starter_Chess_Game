@@ -20,9 +20,8 @@ class Pawn(Piece):
         
         target_square = board.grid[end_row][end_col]
 
-        if status.en_passant_available is not []:
-            if en_passant.check_en_passant(start, end, board, status):
-                return True
+        if en_passant.check_en_passant(start, end, board, status):
+            return True
 
         if start == end:
             #print("same-square move")
@@ -46,9 +45,7 @@ class Pawn(Piece):
                     return False        
         # Diagonal by one (capturing)
         elif abs(start_col - end_col) == 1:
-            if status.en_passant_available == end:
-                return True
-            elif target_square is None:
+            if target_square is None:
                 return False
             elif self.colour == "white":
                 if start_row - end_row == 1 and target_square.colour == "black":
