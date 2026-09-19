@@ -65,20 +65,6 @@ class Board:
 
         # Take the piece from the start position
         moving_piece = self.grid[start_row][start_col]
-
-        #Check if square has a piece
-        if moving_piece is None:
-            status.en_passant_available = []
-            return False
-        
-        if moving_piece.colour != status.active_player:
-            status.en_passant_available = []
-            return False
-
-        # Check legal moves - Might remove depending on how game.py handles legal moves
-        if moving_piece.check_legal_move([start_row, start_col], [end_row, end_col], self, status) == False:
-            status.en_passant_available = []
-            return False
         
         # Update en passant rights if applicable
         if moving_piece.symbol == "P" and start_row == 6 and end_row == 4:
