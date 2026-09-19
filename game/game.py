@@ -65,40 +65,41 @@ while running:
         print("CHECKMATE!")
         running = False
 
+    # Engine Path
+    # print(f"Active player: {status.active_player}\nHuman player : {human_player}")
     if status.active_player != human_player:
+        # Generate legal moves
         all_legal_moves = generate_all_legal_moves.generate_all_legal_moves(board, status)
+        # Make a move
         simple_engines.make_random_move(all_legal_moves, board, status)
-        status.toggle_turn()
+        # Unselect square
         square_selected = False
         continue
 
     # Human path
-    else:
-        if square_selected == True:
-            # Draw highlighted squares (not needed in engine path)
-            draw_highlighted_squares.draw(window, row, col)
-            # assign active piece (done within generate_all_legal_moves)
-            active_piece = board.grid[row][col]
-            if active_piece is not None:
-                if [row, col] in legal_moves:
-                    board.move_piece(start_square, [row, col], status)
-                    status.toggle_turn()
-                    square_selected = False
-                    continue
-                start = [row, col]
-                legal_moves = active_piece.get_legal_moves(start, board, status, False)
-                legal_moves = board.trim_legal_moves(start, legal_moves, status)
-                checkmate_counter = 0
-                
-                draw_legal_moves.draw_legal_moves(window, legal_moves, board, status)
-                start_square = [row, col]
-            else:
-                if [row, col] in legal_moves:
-                    board.move_piece(start_square, [row, col], status)
-                    status.toggle_turn()
-                    square_selected = False
-                legal_moves = []
-                start_square = []
+    elif square_selected == True:
+        # Draw highlighted squares (not needed in engine path)
+        draw_highlighted_squares.draw(window, row, col)
+        # assign active piece (done within generate_all_legal_moves)
+        active_piece = board.grid[row][col]
+        if active_piece is not None:
+            if [row, col] in legal_moves:
+                board.move_piece(start_square, [row, col], status)
+                square_selected = False
+                continue
+            start = [row, col]
+            legal_moves = active_piece.get_legal_moves(start, board, status, False)
+            legal_moves = board.trim_legal_moves(start, legal_moves, status)
+            checkmate_counter = 0
+            
+            draw_legal_moves.draw_legal_moves(window, legal_moves, board, status)
+            start_square = [row, col]
+        else:
+            if [row, col] in legal_moves:
+                board.move_piece(start_square, [row, col], status)
+                square_selected = False
+            legal_moves = []
+            start_square = []
 
     draw_pieces.draw_pieces(window, board.grid)
     display_info.write_active_player(status, window)
