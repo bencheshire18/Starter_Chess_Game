@@ -47,40 +47,44 @@ class Board:
 
     # Move a piece
     def move_piece(self, start, end, status):
-        ep = False
-        # En Passant captured pawn removal
-        if end == status.en_passant_available:
-            ep = True
-            if end[0] == 2:
-                captured_pawn_pos = [3, end[1]]
-            elif end[0] == 5:
-                captured_pawn_pos = [4, end[0]]
-            else:
-                captured_pawn_pos = [0, 0]
+        start_row, start_col = start
+        end_row, end_col = end
 
-        start_row = start[0]
-        start_col = start[1]
-        end_row = end[0]
-        end_col = end[1]
-
-        # Take the piece from the start position
         moving_piece = self.grid[start_row][start_col]
-        
-        # Update en passant rights if applicable
+
+        # Rejected moves must not change any state
+        if moving_piece is None:
+            return False
+        if moving_piece.colour != status.active_player:
+            return False
+        if not moving_piece.check_legal_move([start_row, start_col], [end_row, end_col], self, status):
+            return False
+
+        # Decide en passant BEFORE anything is changed
+        is_en_passant = (
+            moving_piece.name == "Pawn"
+            and end == status.en_passant_available
+            and start_col != end_col
+            and self.grid[end_row][end_col] is None
+        )
+
+        # Only a double pawn push creates new rights; every other move clears them
+        new_en_passant = []
         if moving_piece.symbol == "P" and start_row == 6 and end_row == 4:
-            status.en_passant_available = [5, start_col]
+            new_en_passant = [5, start_col]
         elif moving_piece.symbol == "p" and start_row == 1 and end_row == 3:
-            status.en_passant_available = [2, start_col]
+            new_en_passant = [2, start_col]
 
         castling.castle(self, moving_piece, status, start, end)
         castling.remove_castling_rights(moving_piece, status, start)
 
-        # en_passant captured pawn removal
-        if ep:
-            self.grid[captured_pawn_pos[0]][captured_pawn_pos[1]] = None
+        # The captured pawn is beside the capturer: same row as start, same column as end
+        if is_en_passant:
+            self.grid[start_row][end_col] = None
 
-        # Place it at the destination
-        if self.grid[end_row][end_col] is not None and self.grid[end_row][end_col].name == "Rook":
+        # Capturing a rook on its home square removes that castling right
+        target = self.grid[end_row][end_col]
+        if target is not None and target.name == "Rook":
             if end == [7, 0]:
                 status.queenside_white_castling_available = False
             elif end == [7, 7]:
@@ -89,11 +93,13 @@ class Board:
                 status.queenside_black_castling_available = False
             elif end == [0, 7]:
                 status.kingside_black_castling_available = False
+
         self.grid[end_row][end_col] = moving_piece
-        
-        # Clear the starting square
         self.grid[start_row][start_col] = None
 
+        # Set last, so the recursive rook move inside castle() can't overwrite it
+        status.en_passant_available = new_en_passant
+        status.toggle_turn()
         return True
     
     def would_be_in_check(self, start, end, status):
