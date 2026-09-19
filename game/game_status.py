@@ -7,6 +7,7 @@ class GameStatus:
         self.queenside_black_castling_available = True
         self.in_check = False
         self.en_passant_available = []
+        self.checkmate = False
 
     def toggle_turn(self):
         self.active_player = "black" if self.active_player == "white" else "white"

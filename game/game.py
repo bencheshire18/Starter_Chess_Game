@@ -38,8 +38,6 @@ legal_moves = []
 pygame.event.set_blocked(pygame.MOUSEMOTION)
 while running:
     # Handle events
-    # Checking if checkmate before running through the rest of the logic
-    checkmate_counter = check_for_checkmate.check_for_checkmate(board, status)
 
     status.in_check = board.is_check(status)
     ev = pygame.event.wait()
@@ -61,10 +59,6 @@ while running:
 
     # Draw
     draw_board.draw_board(window)
-
-    if checkmate_counter == 0:
-        print("CHECKMATE!")
-        running = False
 
     # Engine Path
     # print(f"Active player: {status.active_player}\nHuman player : {human_player}")
@@ -101,7 +95,9 @@ while running:
                 square_selected = False
             legal_moves = []
             start_square = []
-
+    if status.checkmate == True:
+        print("Checkmate")
+        running = False
     draw_pieces.draw_pieces(window, board.grid)
     display_info.write_active_player(status, window)
     display_info.write_board_coords(window)

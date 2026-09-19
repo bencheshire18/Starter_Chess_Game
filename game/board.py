@@ -1,6 +1,6 @@
 from game.constants import BOARD_SIZE
 from game.pieces    import Rook, Knight, Bishop, Queen, King, Pawn
-from game.pieces.piece_rules import castling, en_passant
+from game.pieces.piece_rules import castling, en_passant, check_for_checkmate
 
 class Board:
     def __init__(self):
@@ -99,6 +99,11 @@ class Board:
 
         # Set last, so the recursive rook move inside castle() can't overwrite it
         status.en_passant_available = new_en_passant
+        checkmate_counter = check_for_checkmate.check_for_checkmate(self, status)
+
+        if checkmate_counter == 0:
+            print("CHECKMATE!")
+            status.checkmate = True
         status.toggle_turn()
         return True
     
@@ -127,7 +132,8 @@ class Board:
         self.grid[end_row][end_col] = end_square
 
         return result
-    
+
+    # TODO optimise check algorithm so it doesn't check every square every time. Maybe add a callout in the move_piece function?
     def is_check(self, status):
         # Find the king
         active_king = []
