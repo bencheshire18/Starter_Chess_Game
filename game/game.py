@@ -35,6 +35,7 @@ fps_clock = pygame.time.Clock()
 square_selected = False
 running = True
 legal_moves = []
+pygame.event.set_blocked(pygame.MOUSEMOTION)
 while running:
     # Handle events
     # Checking if checkmate before running through the rest of the logic
