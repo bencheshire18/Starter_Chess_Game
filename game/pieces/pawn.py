@@ -59,6 +59,5 @@ class Pawn(Piece):
                     return False
         else:
             return False
-            # TODO: En Passant
 
         return True
