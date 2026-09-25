@@ -16,8 +16,13 @@ class Board:
         return grid
     
     # This is how we place pieces
-    def place_piece(self, piece, row, column):
-        self.grid[row][column] = piece
+    def place_piece(self, piece, row, col):
+        self.grid[row][col] = piece
+
+    def clear_board(self):
+        for row in range(8):
+            for col in range(8):
+                self.grid[row][col] = None
 
     # Setup the start board
     def setup_board(self):
@@ -44,6 +49,10 @@ class Board:
         self.place_piece(Rook  ("black"), 0, 7)
         for i in range(BOARD_SIZE):
             self.place_piece(Pawn("black"), 1, i)
+
+    def reset_game(self):
+        self.clear_board()
+        self.setup_board()
 
     # Move a piece
     def move_piece(self, start, end, status):
