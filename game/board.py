@@ -1,6 +1,9 @@
 from game.constants import BOARD_SIZE
 from game.pieces    import Rook, Knight, Bishop, Queen, King, Pawn
 from game.pieces.piece_rules import castling, en_passant, check_for_checkmate
+import pygame 
+import game.constants as c
+from ui import display_info, draw_pieces, update_display, draw_board
 
 class Board:
     def __init__(self):
@@ -200,3 +203,68 @@ class Board:
                 else:
                     row_display.append(square.symbol)
             print(" ".join(row_display))
+
+    def show_checkmate(self, window, status, fps_clock):
+        waiting = True
+        colour = c.BUTTON
+        button_pressed = False
+        while waiting == True:
+            pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
+            pygame.event.set_allowed(pygame.VIDEORESIZE)
+            pygame.event.set_allowed(pygame.MOUSEMOTION)
+            pygame.event.set_allowed(pygame.MOUSEBUTTONUP)
+            ev = pygame.event.wait()
+            mouse_pos = pygame.mouse.get_pos()
+
+            reset_font_width, reset_font_height = window.reset_font.size("Reset")
+            checkmate_font_width, checkmate_font_height = window.checkmate_font.size("Checkmate")
+
+            # Compute the reset button's rect up front (same geometry draw_button uses)
+            # so we know hover/press state BEFORE deciding what to draw this frame.
+            reset_button_rect = pygame.Rect(0, 0, reset_font_width + reset_font_width // 10,
+                                             reset_font_height + reset_font_height // 10)
+            reset_button_rect.center = (c.MARGIN + window.board_size // 2,
+                                         c.MARGIN + window.board_size // 2 + 75)
+            is_hovering = reset_button_rect.collidepoint(mouse_pos)
+
+            # --- Handle the event FIRST, so state is current before we draw ---
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if ev.button == 1 and is_hovering:
+                    button_pressed = True
+
+            elif ev.type == pygame.MOUSEBUTTONUP:
+                if ev.button == 1 and button_pressed and is_hovering:
+                    self.reset_game()
+                    status.checkmate = False
+                    status.active_player = "white"
+                    waiting = False
+
+                    draw_board.draw_board(window)
+                    draw_pieces.draw_pieces(window, self.grid)
+                    display_info.write_active_player(status, window)
+                    update_display.update_display(self, status, window, fps_clock, False)
+                button_pressed = False
+
+            elif ev.type == pygame.QUIT:
+                running = False
+                waiting = False
+
+            elif ev.type == pygame.VIDEORESIZE:
+                window.resize(ev.w, ev.h)
+
+            # --- Decide colour from up-to-date state ---
+            if button_pressed and is_hovering:
+                colour = c.BUTTON_CLICK
+            elif is_hovering:
+                colour = c.BUTTON_HOVER
+            else:
+                colour = c.BUTTON
+
+            # --- Only draw the checkmate screen if we're still on it ---
+            if waiting:
+                draw_board.draw_board(window)
+                display_info.draw_button(window, checkmate_font_width + checkmate_font_width//10, checkmate_font_height + checkmate_font_height//10, 0, 0, c.BUTTON)
+                display_info.draw_button(window, reset_font_width + reset_font_width//10, reset_font_height + reset_font_height//10, 0, 75, colour)
+                display_info.write_checkmate(status, window)
+                display_info.draw_reset_button(status, window)
+                update_display.update_display(self, status, window, fps_clock, is_hovering)

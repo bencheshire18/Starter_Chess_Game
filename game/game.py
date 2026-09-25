@@ -7,6 +7,7 @@ from ui.window import Window
 from ui.get_board_square_from_mouse_coords import get_board_square_from_mouse_coords
 from ui import display_info, draw_board, draw_pieces, draw_highlighted_squares, draw_legal_moves, update_display
 from game.engine import simple_engines, generate_all_legal_moves
+import game.constants as c
 
 human_player = "white"
 window = Window()
@@ -98,30 +99,6 @@ while running:
             legal_moves = []
             start_square = []
     if status.checkmate == True:
-        waiting = True
-        while waiting == True:
-            display_info.write_checkmate(status, window)
-            display_info.draw_reset_button(status, window) # TODO make this look more like a button
-            pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
-            pygame.event.set_allowed(pygame.VIDEORESIZE)
-            ev = pygame.event.wait() # TODO Only wait for left mouse click or quit...
-            x, y = pygame.mouse.get_pos()
-            checkmate_font_width, checkmate_font_height = window.font.size("Reset")
-            update_display.update_display(board, status, window, fps_clock)
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if ev.button == 1:
-                    # print(f"x: {x}\ny: {y}\n\nX bounds: {window.margin + window.board_size // 2 - checkmate_font_height // 2} -> {window.margin + window.board_size // 2 + checkmate_font_height // 2}\nY bounds: {window.margin + window.board_size // 2 - checkmate_font_width // 2 + 75} -> {window.margin + window.board_size // 2 + checkmate_font_width // 2 + 75}")
-                    if x >= window.margin + window.board_size // 2 - checkmate_font_height // 2 and x <= window.margin + window.board_size // 2 + checkmate_font_height // 2:
-                        if y >= window.margin + window.board_size // 2 - checkmate_font_width // 2 + 75 and y <= window.margin + window.board_size // 2 + checkmate_font_width // 2 + 75:
-                            board.reset_game()
-                            status.checkmate = False
-                            status.active_player = "white"
-                            waiting = False
-            elif ev.type == pygame.QUIT:
-                running = False
-                waiting = False
-            elif ev.type == pygame.VIDEORESIZE:
-                window.resize(ev.w, ev.h)
-            draw_board.draw_board(window)
+        board.show_checkmate(window, status, fps_clock)
 
     update_display.update_display(board, status, window, fps_clock)
