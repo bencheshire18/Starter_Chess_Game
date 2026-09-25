@@ -97,14 +97,21 @@ while running:
             start_square = []
     if status.checkmate == True:
         print("Checkmate")
-        running = False
-    draw_pieces.draw_pieces(window, board.grid)
-    display_info.write_active_player(status, window)
-    display_info.write_board_coords(window)
-    display_info.write_castling_availability(status, window)
-    display_info.write_is_check(status, window)
-    display_info.write_en_passant(status, window)
+        waiting = True
+        while waiting == True:
+            display_info.write_checkmate(status, window)
+            display_info.draw_reset_button(status, window) # TODO make this look more like a button
+            ev = pygame.event.wait() # TODO Only wait for left mouse click or quit...
+            x, y = pygame.mouse.get_pos()
+            checkmate_font_width, checkmate_font_height = window.font.size("Reset")
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if ev.button == 1:
+                    if x >= window.margin + window.board_size // 2 - 7 and x <= window.margin + window.board_size // 2 + 7:
+                        if y >= window.margin + window.board_size // 2 - checkmate_font_width // 2 and y <= window.margin + window.board_size // 2 + checkmate_font_width // 2:
+                            # TODO reset the board and start again
+                            pass
+            elif ev.type == quit:
+                running = False
+                waiting = False
 
-    # Update display
-    pygame.display.flip()
-    fps_clock.tick(60)
+    update_display.update_display(board, status, window, fps_clock)

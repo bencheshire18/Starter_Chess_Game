@@ -39,3 +39,13 @@ def write_en_passant(status, window):
     label = window.font.render(f"En Passant available: {status.en_passant_available}", True, (255, 255, 255))
     label_rect = label.get_rect(topleft=(window.board_size + window.margin * 2, 130))
     window.screen.blit(label, label_rect)
+
+def write_checkmate(status, window):
+    label = window.checkmate_font.render(f"Checkmate", True, (255, 255, 255))
+    label_rect = label.get_Rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2))
+    window.screen.blit(label, label_rect)
+
+def draw_reset_button(status, window):
+    label = window.font.render(f"Reset", True, (255, 255, 255))
+    label_rect = label.get_Rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2 + 75))
+    window.screen.blit(label, label_rect)
