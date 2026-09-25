@@ -34,6 +34,11 @@ BLACK                       = (0  , 0  , 0  )
 WHITE                       = (255, 255, 255)
 LIGHT_SQUARE_LEGAL_MOVE     = (204, 184, 151)
 DARK_SQUARE_LEGAL_MOVE      = (158, 116, 84 )
+BUTTON                      = (70 , 130, 100)
+BUTTON_HOVER                = (90 , 160, 125)
+BUTTON_CLICK                = (55 , 105, 80 )
+BORDER                      = (20 , 40 , 30 )
+TEXT_COLOUR                 = (255, 255, 255)
 
 MARGIN = 25
 BOARD_WIDTH = min(SCREEN_HEIGHT, SCREEN_WIDTH) - MARGIN * 2

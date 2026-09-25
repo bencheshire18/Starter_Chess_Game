@@ -14,6 +14,7 @@ class Window:
         pygame.font.init()
         self.font = pygame.font.SysFont("monospace", 15)
         self.checkmate_font = pygame.font.SysFont("arial", self.square_size)
+        self.reset_font = pygame.font.SysFont("arial", self.square_size // 2)
 
         self.update_dimensions()
 
