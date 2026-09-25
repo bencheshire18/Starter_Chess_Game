@@ -36,7 +36,7 @@ fps_clock = pygame.time.Clock()
 square_selected = False
 running = True
 legal_moves = []
-pygame.event.set_blocked(pygame.MOUSEMOTION)
+pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
 while running:
     # Handle events
 
@@ -98,22 +98,30 @@ while running:
             legal_moves = []
             start_square = []
     if status.checkmate == True:
-        print("Checkmate")
         waiting = True
         while waiting == True:
             display_info.write_checkmate(status, window)
             display_info.draw_reset_button(status, window) # TODO make this look more like a button
+            pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
+            pygame.event.set_allowed(pygame.VIDEORESIZE)
             ev = pygame.event.wait() # TODO Only wait for left mouse click or quit...
             x, y = pygame.mouse.get_pos()
             checkmate_font_width, checkmate_font_height = window.font.size("Reset")
+            update_display.update_display(board, status, window, fps_clock)
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 if ev.button == 1:
-                    if x >= window.margin + window.board_size // 2 - 7 and x <= window.margin + window.board_size // 2 + 7:
-                        if y >= window.margin + window.board_size // 2 - checkmate_font_width // 2 and y <= window.margin + window.board_size // 2 + checkmate_font_width // 2:
-                            # TODO reset the board and start again
-                            pass
-            elif ev.type == quit:
+                    # print(f"x: {x}\ny: {y}\n\nX bounds: {window.margin + window.board_size // 2 - checkmate_font_height // 2} -> {window.margin + window.board_size // 2 + checkmate_font_height // 2}\nY bounds: {window.margin + window.board_size // 2 - checkmate_font_width // 2 + 75} -> {window.margin + window.board_size // 2 + checkmate_font_width // 2 + 75}")
+                    if x >= window.margin + window.board_size // 2 - checkmate_font_height // 2 and x <= window.margin + window.board_size // 2 + checkmate_font_height // 2:
+                        if y >= window.margin + window.board_size // 2 - checkmate_font_width // 2 + 75 and y <= window.margin + window.board_size // 2 + checkmate_font_width // 2 + 75:
+                            board.reset_game()
+                            status.checkmate = False
+                            status.active_player = "white"
+                            waiting = False
+            elif ev.type == pygame.QUIT:
                 running = False
                 waiting = False
+            elif ev.type == pygame.VIDEORESIZE:
+                window.resize(ev.w, ev.h)
+            draw_board.draw_board(window)
 
     update_display.update_display(board, status, window, fps_clock)
