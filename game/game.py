@@ -81,10 +81,10 @@ while running:
             if [row, col] in legal_moves:
                 board.move_piece(start_square, [row, col], status)
                 square_selected = False
+                update_display.update_display(board, status, window, fps_clock)
                 continue
             start = [row, col]
             legal_moves = active_piece.get_legal_moves(start, board, status, False)
-            legal_moves = board.trim_legal_moves(start, legal_moves, status)
             checkmate_counter = 0
             
             draw_legal_moves.draw_legal_moves(window, legal_moves, board, status)
