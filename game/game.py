@@ -2,7 +2,7 @@ import pygame  # type: ignore[import-not-found]
 from game.board import Board
 from game.game_status import GameStatus
 from game.pieces import King, Queen, Bishop, Pawn, Rook, Knight
-from game.pieces.piece_rules import check_for_checkmate
+from game.pieces.piece_rules import promotion
 from ui.window import Window
 from ui.get_board_square_from_mouse_coords import get_board_square_from_mouse_coords
 from ui import display_info, draw_board, draw_pieces, draw_highlighted_squares, draw_legal_moves, update_display
@@ -16,18 +16,26 @@ status = GameStatus()
 board.create_grid()
 # board.setup_board()
 
-case = 2
+case = 3
 
 match case:
     case 1:
+        # Standard chess setup
         board.setup_board()
     case 2:
+        # Checkmate test case
         board.place_piece(King("white"), 7, 6)   # g1
         board.place_piece(Rook("white"), 7, 0)   # a1
         board.place_piece(King("black"), 0, 6)   # g8
         board.place_piece(Pawn("black"), 1, 5)   # f7
         board.place_piece(Pawn("black"), 1, 6)   # g7
         board.place_piece(Pawn("black"), 1, 7)   # h7
+    case 3:
+        # Pawn promotion test case
+        board.place_piece(King("white"), 7, 4)   # e1
+        board.place_piece(Pawn("white"), 1, 0)   # a7
+        # place black pawn down
+        board.place_piece(King("black"), 0, 4)   # e8
 # Initialisation
 
 pygame.init()
@@ -42,6 +50,9 @@ while running:
     # Handle events
 
     status.in_check = board.is_check(status)
+
+    promotion.promote_pawn(board)
+
     ev = pygame.event.wait()
 
     if ev.type == pygame.QUIT:
