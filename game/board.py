@@ -112,11 +112,11 @@ class Board:
         # Set last, so the recursive rook move inside castle() can't overwrite it
         status.en_passant_available = new_en_passant
         status.toggle_turn()
-        checkmate_counter = check_for_checkmate.check_for_checkmate(self, status)
+        checkmate_counter, stalemate_counter = check_for_checkmate.check_for_checkmate(self, status)
 
-        if checkmate_counter == 0 and status.in_check == True:
+        if checkmate_counter == 0:
             status.checkmate = True
-        elif checkmate_counter == 0 and status.in_check == False:
+        if stalemate_counter == 0:
             status.stalemate = True
 
         return True

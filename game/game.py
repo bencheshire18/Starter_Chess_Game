@@ -6,7 +6,7 @@ from game.pieces.piece_rules import promotion
 from ui.window import Window
 from ui.get_board_square_from_mouse_coords import get_board_square_from_mouse_coords
 from ui import display_info, draw_board, draw_pieces, draw_highlighted_squares, draw_legal_moves, update_display
-from game.engine import simple_engines, generate_all_legal_moves
+from game.engine import simple_engines, copilot_engine, generate_all_legal_moves
 import game.constants as c
 
 human_player = "white"
@@ -16,7 +16,7 @@ status = GameStatus()
 board.create_grid()
 # board.setup_board()
 
-case = 1
+case = 2
 
 match case:
     case 1:
@@ -84,7 +84,7 @@ while running:
         # Generate legal moves
         all_legal_moves = generate_all_legal_moves.generate_all_legal_moves(board, status)
         # Make a move
-        simple_engines.make_random_move(all_legal_moves, board, status)
+        copilot_engine.make_move(all_legal_moves, board, status)
         # Unselect square
         square_selected = False
         update_display.update_display(board, status, window, fps_clock)
