@@ -1,4 +1,4 @@
-import pygame
+import pygame  # type: ignore[import-not-found]
 from game.board import Board
 from game.game_status import GameStatus
 from game.pieces import King, Queen, Bishop, Pawn, Rook, Knight
