@@ -8,6 +8,7 @@ class GameStatus:
         self.in_check = False
         self.en_passant_available = []
         self.checkmate = False
+        self.stalemate = False
 
     def toggle_turn(self):
         self.active_player = "black" if self.active_player == "white" else "white"

@@ -16,7 +16,7 @@ status = GameStatus()
 board.create_grid()
 # board.setup_board()
 
-case = 3
+case = 1
 
 match case:
     case 1:
@@ -36,6 +36,11 @@ match case:
         board.place_piece(Pawn("white"), 1, 0)   # a7
         # place black pawn down
         board.place_piece(King("black"), 0, 4)   # e8
+    case 4:
+        # Stalemate test case
+        board.place_piece(King("black"), 7, 7)   # h1
+        board.place_piece(Queen("white"), 4, 6)  # g3
+        board.place_piece(King("white"), 7, 5)   # f1
 # Initialisation
 
 pygame.init()
@@ -111,5 +116,7 @@ while running:
             start_square = []
     if status.checkmate == True:
         board.show_checkmate(window, status, fps_clock)
+    elif status.stalemate == True:
+        board.show_stalemate(window, status, fps_clock)
 
     update_display.update_display(board, status, window, fps_clock)

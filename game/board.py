@@ -114,8 +114,10 @@ class Board:
         status.toggle_turn()
         checkmate_counter = check_for_checkmate.check_for_checkmate(self, status)
 
-        if checkmate_counter == 0:
+        if checkmate_counter == 0 and status.in_check == True:
             status.checkmate = True
+        elif checkmate_counter == 0 and status.in_check == False:
+            status.stalemate = True
 
         return True
     
@@ -267,4 +269,69 @@ class Board:
                 display_info.draw_button(window, reset_font_width + reset_font_width//10, reset_font_height + reset_font_height//10, 0, 75, colour)
                 display_info.write_checkmate(status, window)
                 display_info.draw_reset_button(status, window)
+                update_display.update_display(self, status, window, fps_clock, is_hovering)
+
+    def show_stalemate(self, window, status, fps_clock):
+        waiting = True
+        colour = c.BUTTON_STALEMATE
+        button_pressed = False
+        while waiting == True:
+            pygame.event.set_allowed(pygame.MOUSEBUTTONDOWN)
+            pygame.event.set_allowed(pygame.VIDEORESIZE)
+            pygame.event.set_allowed(pygame.MOUSEMOTION)
+            pygame.event.set_allowed(pygame.MOUSEBUTTONUP)
+            ev = pygame.event.wait()
+            mouse_pos = pygame.mouse.get_pos()
+
+            reset_font_width, reset_font_height = window.reset_font.size("Reset")
+            stalemate_font_width, stalemate_font_height = window.checkmate_font.size("Stalemate")
+
+            # Compute the reset button's rect up front (same geometry draw_button uses)
+            # so we know hover/press state BEFORE deciding what to draw this frame.
+            reset_button_rect = pygame.Rect(0, 0, reset_font_width + reset_font_width // 10,
+                                             reset_font_height + reset_font_height // 10)
+            reset_button_rect.center = (c.MARGIN + window.board_size // 2,
+                                         c.MARGIN + window.board_size // 2 + 75)
+            is_hovering = reset_button_rect.collidepoint(mouse_pos)
+
+            # --- Handle the event FIRST, so state is current before we draw ---
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if ev.button == 1 and is_hovering:
+                    button_pressed = True
+
+            elif ev.type == pygame.MOUSEBUTTONUP:
+                if ev.button == 1 and button_pressed and is_hovering:
+                    self.reset_game()
+                    status.stalemate = False
+                    status.active_player = "white"
+                    waiting = False
+
+                    draw_board.draw_board(window)
+                    draw_pieces.draw_pieces(window, self.grid)
+                    display_info.write_active_player(status, window)
+                    update_display.update_display(self, status, window, fps_clock, False)
+                button_pressed = False
+
+            elif ev.type == pygame.QUIT:
+                running = False
+                waiting = False
+
+            elif ev.type == pygame.VIDEORESIZE:
+                window.resize(ev.w, ev.h)
+
+            # --- Decide colour from up-to-date state ---
+            if button_pressed and is_hovering:
+                colour = c.BUTTON_STALEMATE_CLICK
+            elif is_hovering:
+                colour = c.BUTTON_STALEMATE_HOVER
+            else:
+                colour = c.BUTTON_STALEMATE
+
+            # --- Only draw the stalemate screen if we're still on it ---
+            if waiting:
+                draw_board.draw_board(window)
+                display_info.draw_stalemate_button(window, stalemate_font_width + stalemate_font_width//10, stalemate_font_height + stalemate_font_height//10, 0, 0, c.BUTTON_STALEMATE)
+                display_info.draw_stalemate_button(window, reset_font_width + reset_font_width//10, reset_font_height + reset_font_height//10, 0, 75, colour)
+                display_info.write_stalemate(status, window)
+                display_info.draw_stalemate_reset_button(status, window)
                 update_display.update_display(self, status, window, fps_clock, is_hovering)

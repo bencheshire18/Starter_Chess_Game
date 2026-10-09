@@ -52,7 +52,24 @@ def draw_reset_button(status, window):
     label_rect = label.get_rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2 + 75))
     window.screen.blit(label, label_rect)
 
+def draw_stalemate_reset_button(status, window):
+    label = window.reset_font.render(f"Reset", True, (255, 255, 255))
+    label_rect = label.get_rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2 + 75))
+    window.screen.blit(label, label_rect)
+
 def draw_button(window, width=10, height=10, x_centre_offset=0, y_centre_offset=0, colour=(255, 255, 255)):
+    # Button geometry
+    button_rect = pygame.Rect(0, 0, width, height)
+    button_rect.center = (c.MARGIN + window.board_size // 2 + x_centre_offset, c.MARGIN + window.board_size // 2 + y_centre_offset)
+    boarder_rad = 10
+        # Border first (slightly bigger rect), then fill on top -> clean outline
+    border_rect = button_rect.inflate(4, 4)
+    pygame.draw.rect(window.screen, c.BORDER, border_rect, border_radius=boarder_rad + 2)
+    pygame.draw.rect(window.screen, colour, button_rect, border_radius=boarder_rad)
+
+    return button_rect
+
+def draw_stalemate_button(window, width=10, height=10, x_centre_offset=0, y_centre_offset=0, colour=(255, 255, 255)):
     # Button geometry
     button_rect = pygame.Rect(0, 0, width, height)
     button_rect.center = (c.MARGIN + window.board_size // 2 + x_centre_offset, c.MARGIN + window.board_size // 2 + y_centre_offset)
@@ -67,4 +84,9 @@ def draw_button(window, width=10, height=10, x_centre_offset=0, y_centre_offset=
 def write_is_hovering(is_hovering, window):
     label = window.font.render(f"Is Hovering: {is_hovering}", True, (255, 255, 255))
     label_rect = label.get_rect(topleft=(window.board_size + window.margin * 2, 150))
+    window.screen.blit(label, label_rect)
+
+def write_stalemate(status, window):
+    label = window.checkmate_font.render(f"Stalemate", True, (255, 255, 255))
+    label_rect = label.get_rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2))
     window.screen.blit(label, label_rect)
