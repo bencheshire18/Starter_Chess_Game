@@ -114,9 +114,9 @@ class Board:
         status.toggle_turn()
         checkmate_counter, stalemate_counter = check_for_checkmate.check_for_checkmate(self, status)
 
-        if checkmate_counter == 0:
+        if checkmate_counter > 0:
             status.checkmate = True
-        if stalemate_counter == 0:
+        if stalemate_counter > 0:
             status.stalemate = True
 
         return True
