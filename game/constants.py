@@ -50,8 +50,11 @@ SQUARE_WIDTH = int(round(BOARD_WIDTH/8))
 PIECE_VALUES = {
 	"P": 1,
 	"N": 3,
-	"B": 3,
+	"B": 3.25,
 	"R": 5,
 	"Q": 9,
 	"K": 0,
 }
+
+CENTRAL_PAWN = 0.1
+EDGE_KNIGHT = 0.1

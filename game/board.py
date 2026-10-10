@@ -4,6 +4,7 @@ from game.pieces.piece_rules import castling, en_passant, check_for_checkmate
 import pygame 
 import game.constants as c
 from ui import display_info, draw_pieces, update_display, draw_board
+from engine import evaluate_position
 
 class Board:
     def __init__(self):
@@ -114,6 +115,7 @@ class Board:
         status.toggle_turn()
         status.in_check = self.is_check(status)
         status.checkmate, status.stalemate = check_for_checkmate.check_for_checkmate(self, status)
+        status.evaluation = evaluate_position.evaluate(self)
 
         return True
     

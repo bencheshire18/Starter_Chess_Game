@@ -9,6 +9,7 @@ def update_display(board, status, window, fps_clock, is_hovering=False):
     display_info.write_is_check(status, window)
     display_info.write_en_passant(status, window)
     display_info.write_is_hovering(is_hovering, window)
+    display_info.show_evaluation(status, window)
 
     # Update display
     pygame.display.flip()

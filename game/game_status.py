@@ -9,6 +9,7 @@ class GameStatus:
         self.en_passant_available = []
         self.checkmate = False
         self.stalemate = False
+        self.evaluation = 0
 
     def toggle_turn(self):
         self.active_player = "black" if self.active_player == "white" else "white"

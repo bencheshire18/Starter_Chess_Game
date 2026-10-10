@@ -90,3 +90,8 @@ def write_stalemate(status, window):
     label = window.checkmate_font.render(f"Stalemate", True, (255, 255, 255))
     label_rect = label.get_rect(center=(window.margin + window.board_size // 2, window.margin + window.board_size // 2))
     window.screen.blit(label, label_rect)
+
+def show_evaluation(status, window):
+    label = window.font.render(f"Evaluation: {round(status.evaluation, 1)}", True, (255, 255, 255))
+    label_rect = label.get_rect(topleft=(window.board_size + window.margin * 2, 170))
+    window.screen.blit(label, label_rect)
