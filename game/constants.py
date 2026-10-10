@@ -46,3 +46,12 @@ TEXT_COLOUR                 = (255, 255, 255)
 MARGIN = 25
 BOARD_WIDTH = min(SCREEN_HEIGHT, SCREEN_WIDTH) - MARGIN * 2
 SQUARE_WIDTH = int(round(BOARD_WIDTH/8))
+
+PIECE_VALUES = {
+	"P": 1,
+	"N": 3,
+	"B": 3,
+	"R": 5,
+	"Q": 9,
+	"K": 0,
+}
