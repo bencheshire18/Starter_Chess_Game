@@ -62,7 +62,7 @@ while running:
     ev = pygame.event.wait()
 
     if ev.type == pygame.QUIT:
-        running = False
+        break
 
     elif ev.type == pygame.VIDEORESIZE:
         window.resize(ev.w, ev.h)
