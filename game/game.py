@@ -17,7 +17,7 @@ status = GameStatus()
 board.create_grid()
 # board.setup_board()
 
-case = 4
+case = 2
 
 match case:
     case 1:
@@ -31,6 +31,13 @@ match case:
         board.place_piece(Pawn("black"), 1, 5)   # f7
         board.place_piece(Pawn("black"), 1, 6)   # g7
         board.place_piece(Pawn("black"), 1, 7)   # h7
+        # add more pieces onto the board to make it more interesting
+        board.place_piece(Pawn("black"), 2, 5)   # f6
+        board.place_piece(Pawn("black"), 2, 6)   # g6
+        board.place_piece(Pawn("black"), 2, 7)   # h6
+        board.place_piece(Pawn("black"), 3, 5)   # f5
+        board.place_piece(Pawn("black"), 3, 6)   # g5
+        board.place_piece(Pawn("black"), 3, 7)   # h5
     case 3:
         # Pawn promotion test case
         board.place_piece(King("white"), 7, 4)   # e1
@@ -80,7 +87,6 @@ while running:
     draw_board.draw_board(window)
 
     # Engine Path
-    # print(f"Active player: {status.active_player}\nHuman player : {human_player}")
     if status.active_player != human_player:
         # Generate legal moves
         all_legal_moves = generate_all_legal_moves.generate_all_legal_moves(board, status)

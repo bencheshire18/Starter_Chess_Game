@@ -1,16 +1,14 @@
 def check_for_checkmate(board, status):
-    checkmate_counter = 0
-    stalemate_counter = 0
-    for rows in range(8):
-        for cols in range(8):
-            check_start = [rows, cols]
-            checking_piece = board.grid[rows][cols]
-            if checking_piece is not None and checking_piece.colour == status.active_player:
-                checking_legal_moves = checking_piece.get_legal_moves(check_start, board, status, False)
-                checking_legal_moves = board.trim_legal_moves(check_start, checking_legal_moves, status)
-                if checking_legal_moves != [] and not status.in_check:
-                    stalemate_counter += 1
-                if checking_legal_moves != [] and status.in_check:
-                    checkmate_counter += 1
+    for row in range(8):
+        for col in range(8):
+            piece = board.grid[row][col]
+            if piece is None or piece.colour != status.active_player:
+                continue
 
-    return checkmate_counter, stalemate_counter
+            legal_moves = piece.get_legal_moves([row, col], board, status, False)
+            if legal_moves:
+                return False, False
+
+    if status.in_check:
+        return True, False
+    return False, True
