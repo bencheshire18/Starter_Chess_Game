@@ -1,4 +1,5 @@
 import pygame  # type: ignore[import-not-found]
+from engine import generate_all_legal_moves, simple_engines
 from game.board import Board
 from game.game_status import GameStatus
 from game.pieces import King, Queen, Bishop, Pawn, Rook, Knight
@@ -6,7 +7,7 @@ from game.pieces.piece_rules import promotion
 from ui.window import Window
 from ui.get_board_square_from_mouse_coords import get_board_square_from_mouse_coords
 from ui import display_info, draw_board, draw_pieces, draw_highlighted_squares, draw_legal_moves, update_display
-from game.engine import simple_engines, copilot_engine, generate_all_legal_moves
+from engine import copilot_engine
 import game.constants as c
 
 human_player = "white"
@@ -16,7 +17,7 @@ status = GameStatus()
 board.create_grid()
 # board.setup_board()
 
-case = 2
+case = 4
 
 match case:
     case 1:
@@ -84,7 +85,7 @@ while running:
         # Generate legal moves
         all_legal_moves = generate_all_legal_moves.generate_all_legal_moves(board, status)
         # Make a move
-        copilot_engine.make_move(all_legal_moves, board, status)
+        simple_engines.make_random_move(all_legal_moves, board, status)
         # Unselect square
         square_selected = False
         update_display.update_display(board, status, window, fps_clock)
